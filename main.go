@@ -15,10 +15,14 @@ func main() {
 	}
 
 	// connect and ping the database to check healthiness
-	if err := postgres.CheckDBConnection(); err != nil {
+	if db, err := postgres.CheckDBConnection(); err != nil {
 		log.Fatal(err)
-	}
+		return
+	} else {
+		// wrapper class to create and populate a new cli app
+		cli.NewApp(db)
 
-	// wrapper class to create and populate a new cli app
-	cli.NewApp()
+		//defer a graceful shutdown
+		defer db.Close()
+	}
 }

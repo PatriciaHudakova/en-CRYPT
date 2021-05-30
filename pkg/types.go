@@ -2,9 +2,12 @@ package pkg
 
 import "time"
 
-// User mimics the fields we would find in the user database
+// User mimics the fields we would find in the user database, used for authentication
 type User struct {
 	userID    int // primary key
+	username  string
+	password  string
+	email     string //recovery purposes
 	firstName string
 	lastName  string
 }

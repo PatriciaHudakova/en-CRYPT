@@ -1,15 +1,21 @@
 package cli
 
 import (
+	"database/sql"
 	"github.com/urfave/cli/v2"
 	"log"
 	"os"
+	"time"
 )
 
-func NewApp() {
+var (
+	commandTimeout = 3 * time.Second
+)
+
+func NewApp(db *sql.DB) {
 	app := cli.NewApp()
 	info(app)
-	commands(app)
+	commands(app, db)
 
 	err := app.Run(os.Args)
 	if err != nil {
@@ -28,7 +34,7 @@ func info(app *cli.App) {
 	app.Version = "1.0"
 }
 
-func commands(app *cli.App) {
+func commands(app *cli.App, db *sql.DB) {
 	app.Commands = []*cli.Command{
 		{
 			Name:    "Create",
@@ -52,7 +58,7 @@ func commands(app *cli.App) {
 			Name:    "Get All",
 			Aliases: []string{"ga"},
 			Usage:   "Displays all credentials from the database",
-			Action:  GetAll(),
+			Action:  GetAll(db),
 		},
 		{
 			Name:    "Get",
